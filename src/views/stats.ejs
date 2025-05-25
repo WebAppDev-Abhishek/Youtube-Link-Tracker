@@ -1,0 +1,63 @@
+<div class="max-w-4xl mx-auto">
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold">Link Statistics</h1>
+            <a href="/" class="text-blue-600 hover:text-blue-800">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Home
+            </a>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+            <div class="bg-blue-50 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold mb-2">Original URL</h2>
+                <a href="<%= link.originalUrl %>" target="_blank" class="text-blue-600 hover:text-blue-800 break-all">
+                    <%= link.originalUrl %>
+                </a>
+            </div>
+            <div class="bg-green-50 p-6 rounded-lg">
+                <h2 class="text-xl font-semibold mb-2">Total Clicks</h2>
+                <p class="text-3xl font-bold text-green-600"><%= totalClicks %></p>
+            </div>
+        </div>
+
+        <div class="bg-gray-50 p-6 rounded-lg">
+            <h2 class="text-xl font-semibold mb-4">Click History</h2>
+            <% if (clicks.length > 0) { %>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Timestamp
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    IP Address
+                                </th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    User Agent
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <% clicks.reverse().forEach(click => { %>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <%= new Date(click.timestamp).toLocaleString() %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                        <%= click.ip %>
+                                    </td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">
+                                        <%= click.userAgent %>
+                                    </td>
+                                </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            <% } else { %>
+                <p class="text-gray-500 text-center py-4">No clicks recorded yet.</p>
+            <% } %>
+        </div>
+    </div>
+</div> 

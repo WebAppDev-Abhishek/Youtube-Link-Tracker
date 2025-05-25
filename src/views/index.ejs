@@ -1,0 +1,181 @@
+<div class="max-w-6xl mx-auto">
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-blue-800 rounded-lg shadow-xl p-8 mb-8 text-white">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-4xl font-bold mb-4">Track Your YouTube Links</h1>
+            <p class="text-xl text-blue-100 mb-8">Create short, trackable links for your YouTube videos and monitor their performance.</p>
+            
+            <form action="/create" method="POST" class="flex gap-4 max-w-2xl mx-auto">
+                <div class="flex-grow">
+                    <input type="url" 
+                           name="url" 
+                           id="url" 
+                           required 
+                           placeholder="Paste your YouTube URL here..."
+                           class="w-full px-6 py-3 rounded-lg text-gray-900 focus:ring-2 focus:ring-blue-400 focus:outline-none">
+                </div>
+                <button type="submit" 
+                        class="bg-white text-blue-600 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg transition duration-200 flex items-center">
+                    <i class="fas fa-link mr-2"></i>Create Link
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Error/Success Messages -->
+    <% if (error) { %>
+        <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-8 rounded-lg" role="alert">
+            <div class="flex items-center">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <p><%= error %></p>
+            </div>
+        </div>
+    <% } %>
+
+    <% if (success) { %>
+        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-8 rounded-lg" role="alert">
+            <div class="flex items-center">
+                <i class="fas fa-check-circle mr-2"></i>
+                <p><%= success %></p>
+            </div>
+            <div class="mt-4 flex gap-4">
+                <button onclick="copyToClipboard('<%= shortUrl %>')" 
+                        class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 flex items-center">
+                    <i class="fas fa-copy mr-2"></i>Copy Link
+                </button>
+                <a href="/stats/<%= shortUrl.split('/').pop() %>" 
+                   class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 flex items-center">
+                    <i class="fas fa-chart-bar mr-2"></i>View Stats
+                </a>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Recent Links Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <!-- Recent Links -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Recent Links</h2>
+                <a href="/history" class="text-blue-600 hover:text-blue-800 text-sm font-medium">
+                    View All <i class="fas fa-arrow-right ml-1"></i>
+                </a>
+            </div>
+            <% if (typeof recentLinks !== 'undefined' && recentLinks.length > 0) { %>
+                <div class="space-y-4">
+                    <% recentLinks.slice(0, 5).forEach(link => { %>
+                        <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition duration-200">
+                            <div class="flex justify-between items-start">
+                                <div class="flex-grow">
+                                    <a href="<%= link.originalUrl %>" target="_blank" 
+                                       class="text-blue-600 hover:text-blue-800 font-medium truncate block">
+                                        <%= link.originalUrl %>
+                                    </a>
+                                    <div class="mt-2 flex items-center text-sm text-gray-500">
+                                        <span class="mr-4">
+                                            <i class="fas fa-clock mr-1"></i>
+                                            <%= new Date(link.createdAt).toLocaleDateString() %>
+                                        </span>
+                                        <span class="mr-4">
+                                            <i class="fas fa-mouse-pointer mr-1"></i>
+                                            <%= link.totalClicks %> clicks
+                                        </span>
+                                        <span>
+                                            <i class="fas fa-users mr-1"></i>
+                                            <%= link.uniqueIPs %> unique
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2 ml-4">
+                                    <button onclick="copyToClipboard('<%= `${baseUrl}/${link.shortCode}` %>')"
+                                            class="text-gray-400 hover:text-gray-600 p-1">
+                                        <i class="fas fa-copy"></i>
+                                    </button>
+                                    <a href="/stats/<%= link.shortCode %>" 
+                                       class="text-gray-400 hover:text-gray-600 p-1">
+                                        <i class="fas fa-chart-bar"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+            <% } else { %>
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-link text-4xl mb-4"></i>
+                    <p>No links created yet</p>
+                </div>
+            <% } %>
+        </div>
+
+        <!-- Quick Stats -->
+        <div class="bg-white rounded-lg shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Quick Stats</h2>
+            <% if (typeof stats !== 'undefined') { %>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-blue-50 rounded-lg p-4">
+                        <div class="text-blue-600 text-sm font-medium mb-1">Total Links</div>
+                        <div class="text-2xl font-bold text-blue-700"><%= stats.totalLinks %></div>
+                    </div>
+                    <div class="bg-green-50 rounded-lg p-4">
+                        <div class="text-green-600 text-sm font-medium mb-1">Total Clicks</div>
+                        <div class="text-2xl font-bold text-green-700"><%= stats.totalClicks %></div>
+                    </div>
+                    <div class="bg-purple-50 rounded-lg p-4">
+                        <div class="text-purple-600 text-sm font-medium mb-1">Unique Visitors</div>
+                        <div class="text-2xl font-bold text-purple-700"><%= stats.uniqueVisitors %></div>
+                    </div>
+                    <div class="bg-yellow-50 rounded-lg p-4">
+                        <div class="text-yellow-600 text-sm font-medium mb-1">Most Clicked</div>
+                        <div class="text-lg font-bold text-yellow-700 truncate">
+                            <%= stats.mostClicked ? stats.mostClicked.totalClicks : 0 %> clicks
+                        </div>
+                    </div>
+                </div>
+            <% } else { %>
+                <div class="text-center py-8 text-gray-500">
+                    <i class="fas fa-chart-pie text-4xl mb-4"></i>
+                    <p>No statistics available yet</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- How it Works Section -->
+    <div class="bg-white rounded-lg shadow-lg p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-8 text-center">How it Works</h2>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="text-center">
+                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-link text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg mb-2">1. Paste URL</h3>
+                <p class="text-gray-600">Enter any valid YouTube video URL</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-magic text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg mb-2">2. Get Short Link</h3>
+                <p class="text-gray-600">We'll generate a unique, short link for you</p>
+            </div>
+            <div class="text-center">
+                <div class="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-chart-line text-blue-600 text-2xl"></i>
+                </div>
+                <h3 class="font-semibold text-lg mb-2">3. Track Performance</h3>
+                <p class="text-gray-600">Monitor clicks and engagement with your link</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        alert('Link copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy text: ', err);
+    });
+}
+</script> 
