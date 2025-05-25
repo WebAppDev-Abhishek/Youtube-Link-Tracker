@@ -211,11 +211,21 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 👥 Authors
 
-- Your Name - Initial work
+- Abhishek - abhisheknodejsdeveloper@gmail.com
 
 ## 🙏 Acknowledgments
 
 - Express.js community
 - Tailwind CSS team
 - EJS template engine
-- All contributors and users 
+- All contributors and users
+  
+![screencapture-localhost-3000-2025-05-26-00_44_36](https://github.com/user-attachments/assets/22d1ae72-3a45-426c-babc-c0add6271c3d)
+
+![screencapture-localhost-3000-create-2025-05-26-00_42_57](https://github.com/user-attachments/assets/b2ee779c-76fe-46c7-ad6c-44f4f1239451)
+
+![screencapture-localhost-3000-stats-cKPqnuji-2025-05-26-00_44_10](https://github.com/user-attachments/assets/1771ad5c-1355-44d7-8185-6951cd61eaaf)
+
+![Screenshot 2025-05-26 004953](https://github.com/user-attachments/assets/d5f79f3c-9c87-4bb2-a548-e4faa3e740f8)
+
+ 
